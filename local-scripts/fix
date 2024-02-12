@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -xeuo pipefail
+cargo clippy --allow-dirty --allow-staged --fix --target ./oro-arch-x86_64/x86_64-unknown-oro.json --bin oro-kernel-x86_64 --bin oro-limine-x86_64 --all-features -Zunstable-options -Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem
+cargo clippy --allow-dirty --allow-staged --fix --target ./oro-arch-aarch64/aarch64-unknown-oro.json --bin oro-kernel-aarch64 --bin oro-limine-aarch64 --all-features -Zunstable-options -Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem
+cargo clippy --allow-dirty --allow-staged --fix -p oro-boot-protocol

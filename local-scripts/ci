@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+X86_64=1
+AARCH64=1
+
+if [ ! -z "${1-}" ]; then
+	case "$1" in
+		x86_64)
+			AARCH64=0;;
+		aarch64)
+			X86_64=0;;
+		*)
+			echo "invalid arch: ${1}" >&2
+			exit 2
+			;;
+	esac
+fi
+
+function on {
+	if [ "${!1}" == 1 ]; then
+		shift
+		set -x
+		"$@"
+		set +x
+	fi
+}
+
+cargo oro-examples
+cargo oro-examples --release
+on X86_64  cargo kernel-x86_64 --profile dev
+on X86_64  cargo kernel-x86_64 --profile release
+on X86_64  cargo limine-x86_64 --profile dev
+on X86_64  cargo limine-x86_64 --profile release
+on AARCH64 cargo kernel-aarch64 --profile dev
+on AARCH64 cargo kernel-aarch64 --profile release
+on AARCH64 cargo limine-aarch64 --profile dev
+on AARCH64 cargo limine-aarch64 --profile release
+on X86_64  cargo oro-clippy -- -D warnings
+on X86_64  cargo oro-clippy-x86_64 -- -D warnings
+on AARCH64  cargo oro-clippy-aarch64 -- -D warnings
+set -x
+env RUSTFLAGS="-D warnings" RUSTDOCFLAGS="-D rustdoc::all" cargo oro-doc
+rm -f target/oro-boot.h && env ORO_BUILD_PROTOCOL_HEADER=1 cargo build -p oro-boot-protocol --release && bash ./oro-boot-protocol/test-boot-header.sh
+cargo oro-test --target $(rustc -vV | sed -n 's|host: ||p')
+cargo fmt --all -- --check
+black --check .
+set +x

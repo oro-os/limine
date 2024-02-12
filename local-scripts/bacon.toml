@@ -1,0 +1,33 @@
+# This is a configuration file for the bacon tool
+#
+# Bacon repository: https://github.com/Canop/bacon
+# Complete help on configuration: https://dystroy.org/bacon/config/
+# You can also check bacon's own bacon.toml file
+#  as an example: https://github.com/Canop/bacon/blob/main/bacon.toml
+
+default_job = "clippy-x86_64"
+
+[jobs.limine-x86_64]
+command = ["cargo", "limine-x86_64", "--color=always"]
+[jobs.limine-aarch64]
+command = ["cargo", "limine-aarch64", "--color=always"]
+[jobs.kernel-x86_64]
+command = ["cargo", "kernel-x86_64", "--color=always"]
+[jobs.kernel-aarch64]
+command = ["cargo", "kernel-aarch64", "--color=always"]
+[jobs.clippy-x86_64]
+command = ["cargo", "oro-clippy-x86_64"]
+[jobs.clippy-common]
+command = ["cargo", "oro-clippy-common"]
+[jobs.common-x86_64]
+command = ["cargo", "x86_64", "-p", "oro-common"]
+[jobs.clippy-aarch64]
+command = ["cargo", "oro-clippy-aarch64"]
+[jobs.doc-x86_64]
+command = ["cargo", "oro-doc-x86_64", "--color=always"]
+[jobs.doc-aarch64]
+command = ["cargo", "oro-doc-aarch64", "--color=always"]
+[jobs.test-region-tree]
+command = ["cargo", "test", "-p", "oro-common-region-tree", "--target=x86_64-unknown-linux-gnu", "--", "--nocapture", "--color", "always"]
+[jobs.clippy]
+command = ["cargo", "clippy"]
