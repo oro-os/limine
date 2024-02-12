@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+cargo kernel-x86_64 "$@"
+cargo limine-x86_64 "$@"
+cargo kernel-aarch64 "$@"
+cargo limine-aarch64 "$@"
+cargo oro-clippy-common
+cargo oro-clippy-x86_64
+cargo oro-clippy-aarch64
+env RUSTFLAGS="-D warnings" cargo doc --all-features --lib --target=oro-arch-x86_64/x86_64-unknown-oro.json -Zunstable-options -Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem
+cargo fmt --all -- --check
