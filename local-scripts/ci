@@ -8,5 +8,6 @@ cargo limine-aarch64 "$@"
 cargo oro-clippy-common
 cargo oro-clippy-x86_64
 cargo oro-clippy-aarch64
-env RUSTFLAGS="-D warnings" cargo doc --all-features --lib --target=oro-arch-x86_64/x86_64-unknown-oro.json -Zunstable-options -Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem
+env RUSTFLAGS="-D warnings" cargo oro-doc-x86_64
+env RUSTFLAGS="-D warnings" cargo oro-doc-aarch64
 cargo fmt --all -- --check
