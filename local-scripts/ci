@@ -1,17 +1,47 @@
 #!/usr/bin/env bash
 
-set -xeuo pipefail
-cargo kernel-x86_64 --profile dev
-cargo kernel-x86_64 --profile release
-cargo limine-x86_64 --profile dev
-cargo limine-x86_64 --profile release
-cargo kernel-aarch64 --profile dev
-cargo kernel-aarch64 --profile release
-cargo limine-aarch64 --profile dev
-cargo limine-aarch64 --profile release
-cargo oro-clippy-common
-cargo oro-clippy-x86_64
-cargo oro-clippy-aarch64
-env RUSTFLAGS="-D warnings" cargo oro-doc-x86_64
-env RUSTFLAGS="-D warnings" cargo oro-doc-aarch64
+set -euo pipefail
+
+X86_64=1
+AARCH64=1
+
+if [ ! -z "${1-}" ]; then
+	case "$1" in
+		x86_64)
+			AARCH64=0;;
+		aarch64)
+			X86_64=0;;
+		*)
+			echo "invalid arch: ${1}" >&2
+			exit 2
+			;;
+	esac
+fi
+
+function on {
+	if [ "${!1}" == 1 ]; then
+		shift
+		set -x
+		"$@"
+		set +x
+	fi
+}
+
+on X86_64  cargo kernel-x86_64 --profile dev
+on X86_64  cargo kernel-x86_64 --profile release
+on X86_64  cargo limine-x86_64 --profile dev
+on X86_64  cargo limine-x86_64 --profile release
+on AARCH64 cargo kernel-aarch64 --profile dev --all-features
+on AARCH64 cargo kernel-aarch64 --profile dev --no-default-features
+on AARCH64 cargo kernel-aarch64 --profile release --all-features
+on AARCH64 cargo kernel-aarch64 --profile release --no-default-features
+on AARCH64 cargo limine-aarch64 --profile dev --all-features
+on AARCH64 cargo limine-aarch64 --profile dev --no-default-features
+on AARCH64 cargo limine-aarch64 --profile release --all-features
+on AARCH64 cargo limine-aarch64 --profile release --no-default-features
+on X86_64  cargo oro-clippy-common
+on X86_64  cargo oro-clippy-x86_64
+on AARCH64  cargo oro-clippy-aarch64
+on X86_64  env RUSTFLAGS="-D warnings" cargo oro-doc-x86_64
+on AARCH64 env RUSTFLAGS="-D warnings" cargo oro-doc-aarch64
 cargo fmt --all -- --check
