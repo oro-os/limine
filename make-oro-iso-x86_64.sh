@@ -9,8 +9,8 @@ cp \
 	limine-bios.sys \
 	limine.cfg \
 	oro-x86_64
-cp /src/oro-os/kernel12/target/x86_64-unknown-oro/${1-debug}/oro-limine-x86_64 oro-x86_64/oro-limine
-cp /src/oro-os/kernel12/target/x86_64-unknown-oro/${1-debug}/oro-kernel-x86_64 oro-x86_64/oro-kernel
+cp /src/oro-os/kernel/target/x86_64-unknown-oro/${1-debug}/oro-limine-x86_64 oro-x86_64/oro-limine
+cp /src/oro-os/kernel/target/x86_64-unknown-oro/${1-debug}/oro-kernel-x86_64 oro-x86_64/oro-kernel
 xorriso \
 	-as mkisofs \
 	-b limine-bios-cd.bin \

@@ -42,6 +42,7 @@ on AARCH64 cargo limine-aarch64 --profile release --no-default-features
 on X86_64  cargo oro-clippy-common
 on X86_64  cargo oro-clippy-x86_64
 on AARCH64  cargo oro-clippy-aarch64
-on X86_64  env RUSTFLAGS="-D warnings" cargo oro-doc-x86_64
-on AARCH64 env RUSTFLAGS="-D warnings" cargo oro-doc-aarch64
+on X86_64  env RUSTFLAGS="-D warnings" RUSTDOCFLAGS="-D rustdoc::all" cargo oro-doc-x86_64
+on AARCH64 env RUSTFLAGS="-D warnings" RUSTDOCFLAGS="-D rustdoc::all" cargo oro-doc-aarch64
 cargo fmt --all -- --check
+black --check .
